@@ -265,6 +265,9 @@ void ComplementaryFilterROS::publish(
       tf::Matrix3x3 M;
       M.setRotation(q);
       M.getRPY(rpy.vector.x, rpy.vector.y, rpy.vector.z);
+      rpy.vector.x *= 180.0 / M_PI;
+      rpy.vector.y *= 180.0 / M_PI;
+      rpy.vector.z *= 180.0 / M_PI;
       rpy_publisher_.publish(rpy);
 
       // Publish whether we are in the steady state, when doing bias estimation
