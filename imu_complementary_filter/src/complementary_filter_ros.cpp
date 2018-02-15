@@ -95,6 +95,7 @@ void ComplementaryFilterROS::initializeParams()
   bool do_bias_estimation;
   double bias_alpha;
   bool do_adaptive_gain;
+  double mag_declination;
 
   if (!nh_private_.getParam ("fixed_frame", fixed_frame_))
     fixed_frame_ = "odom";
@@ -118,6 +119,9 @@ void ComplementaryFilterROS::initializeParams()
     bias_alpha = 0.01;
   if (!nh_private_.getParam ("do_adaptive_gain", do_adaptive_gain))
     do_adaptive_gain = true;
+  if (!nh_private_.getParam ("mag_declination", mag_declination))
+    mag_declination = 0.0;
+  mag_declination_q_.setRPY(0.0, 0.0, -mag_declination);
 
   double orientation_stddev;
   if (!nh_private_.getParam ("orientation_stddev", orientation_stddev))
@@ -230,6 +234,8 @@ void ComplementaryFilterROS::publish(
   double q0, q1, q2, q3;
   filter_.getOrientation(q0, q1, q2, q3);
   tf::Quaternion q = hamiltonToTFQuaternion(q0, q1, q2, q3);
+  q = mag_declination_q_ * q;
+  q.normalize();
 
   // Create and publish fitlered IMU message.
   boost::shared_ptr<sensor_msgs::Imu> imu_msg =
