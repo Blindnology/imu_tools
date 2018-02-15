@@ -25,6 +25,8 @@
 #ifndef IMU_FILTER_MADWICK_IMU_FILTER_H
 #define IMU_FILTER_MADWICK_IMU_FILTER_H
 
+#include "tf2/LinearMath/Quaternion.h"
+
 #include <imu_filter_madgwick/world_frame.h>
 #include <iostream>
 #include <cmath>
@@ -62,21 +64,15 @@ public:
         world_frame_ = frame;
     }
 
-    void getOrientation(double& q0, double& q1, double& q2, double& q3)
+    void getOrientation(double& q0, double& q1, double& q2, double& q3, tf2::Quaternion &mag_declination_q)
     {
-        q0 = this->q0;
-        q1 = this->q1;
-        q2 = this->q2;
-        q3 = this->q3;
-
-        // perform precise normalization of the output, using 1/sqrt()
-        // instead of the fast invSqrt() approximation. Without this,
-        // TF2 complains that the quaternion is not normalized.
-        double recipNorm = 1 / sqrt(q0 * q0 + q1 * q1 + q2 * q2 + q3 * q3);
-        q0 *= recipNorm;
-        q1 *= recipNorm;
-        q2 *= recipNorm;
-        q3 *= recipNorm;
+        tf2::Quaternion q(this->q1, this->q2, this->q3, this->q0);
+        q = mag_declination_q * q;
+        q.normalize();
+        q0 = q.w();
+        q1 = q.x();
+        q2 = q.y();
+        q3 = q.z();
     }
 
     void setOrientation(double q0, double q1, double q2, double q3)
