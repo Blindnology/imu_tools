@@ -275,7 +275,7 @@ void ImuFilterRos::imuMagCallback(
     geometry_msgs::Quaternion orientation;
     if (StatelessOrientation::computeOrientation(world_frame_, lin_acc, mag_compensated, orientation))
     {
-      tf2::Matrix3x3(tf2::Quaternion(orientation.x, orientation.y, orientation.z, orientation.w)).getRPY(roll, pitch, yaw, 0);
+      tf2::Matrix3x3(tf2::Quaternion(orientation.x, orientation.y, orientation.z, orientation.w)).getRPY(roll, pitch, yaw);
       publishRawMsg(time, roll, pitch, yaw);
     }
   }
