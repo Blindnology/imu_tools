@@ -87,6 +87,7 @@ class ComplementaryFilterROS
     bool publish_debug_topics_;
     std::string fixed_frame_;
     double orientation_variance_;
+    tf::Quaternion mag_declination_q_;
 
     // State variables:
     ComplementaryFilter filter_;
