@@ -331,6 +331,9 @@ void ImuFilterRos::publishFilteredMsg(const ImuMsg::ConstPtr& imu_msg_raw)
   {
     geometry_msgs::Vector3Stamped rpy;
     tf2::Matrix3x3(tf2::Quaternion(q1,q2,q3,q0)).getRPY(rpy.vector.x, rpy.vector.y, rpy.vector.z);
+    rpy.vector.x *= 180.0 / M_PI;
+    rpy.vector.y *= 180.0 / M_PI;
+    rpy.vector.z *= 180.0 / M_PI;
 
     rpy.header = imu_msg_raw->header;
     rpy_filtered_debug_publisher_.publish(rpy);
@@ -341,9 +344,9 @@ void ImuFilterRos::publishRawMsg(const ros::Time& t,
   float roll, float pitch, float yaw)
 {
   geometry_msgs::Vector3Stamped rpy;
-  rpy.vector.x = roll;
-  rpy.vector.y = pitch;
-  rpy.vector.z = yaw ;
+  rpy.vector.x = roll * 180.0 / M_PI;
+  rpy.vector.y = pitch * 180.0 / M_PI;
+  rpy.vector.z = yaw * 180.0 / M_PI;
   rpy.header.stamp = t;
   rpy.header.frame_id = imu_frame_;
   rpy_raw_debug_publisher_.publish(rpy);
