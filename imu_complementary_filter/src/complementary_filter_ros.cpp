@@ -121,7 +121,7 @@ void ComplementaryFilterROS::initializeParams()
     do_adaptive_gain = true;
   if (!nh_private_.getParam ("mag_declination", mag_declination))
     mag_declination = 0.0;
-  mag_declination_q_.setRPY(0.0, 0.0, -mag_declination);
+  mag_declination_q_.setRPY(0.0, 0.0, M_PI_2 - mag_declination);
 
   double orientation_stddev;
   if (!nh_private_.getParam ("orientation_stddev", orientation_stddev))
