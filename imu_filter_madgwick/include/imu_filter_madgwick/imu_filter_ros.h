@@ -30,6 +30,7 @@
 #include <sensor_msgs/MagneticField.h>
 #include <geometry_msgs/Vector3Stamped.h>
 #include "tf2_ros/transform_broadcaster.h"
+#include "tf2/LinearMath/Quaternion.h"
 #include <message_filters/subscriber.h>
 #include <message_filters/synchronizer.h>
 #include <message_filters/sync_policies/approximate_time.h>
@@ -88,6 +89,7 @@ class ImuFilterRos
     bool remove_gravity_vector_;
     geometry_msgs::Vector3 mag_bias_;
     double orientation_variance_;
+    tf2::Quaternion mag_declination_q_;
 
     // **** state variables
     boost::mutex mutex_;

@@ -284,7 +284,7 @@ void ImuFilterRos::imuMagCallback(
 void ImuFilterRos::publishTransform(const ImuMsg::ConstPtr& imu_msg_raw)
 {
   double q0,q1,q2,q3;
-  filter_.getOrientation(q0,q1,q2,q3);
+  filter_.getOrientation(q0,q1,q2,q3, mag_declination_q_);
   geometry_msgs::TransformStamped transform;
   transform.header.stamp = imu_msg_raw->header.stamp;
   if (reverse_tf_)
@@ -311,7 +311,7 @@ void ImuFilterRos::publishTransform(const ImuMsg::ConstPtr& imu_msg_raw)
 void ImuFilterRos::publishFilteredMsg(const ImuMsg::ConstPtr& imu_msg_raw)
 {
   double q0,q1,q2,q3;
-  filter_.getOrientation(q0,q1,q2,q3);
+  filter_.getOrientation(q0,q1,q2,q3, mag_declination_q_);
 
   // create and publish filtered IMU message
   boost::shared_ptr<ImuMsg> imu_msg =
@@ -368,7 +368,7 @@ void ImuFilterRos::publishRawMsg(const ros::Time& t,
 
 void ImuFilterRos::reconfigCallback(FilterConfig& config, uint32_t level)
 {
-  double gain, zeta;
+  double gain, zeta, mag_declination;
   boost::mutex::scoped_lock lock(mutex_);
   gain = config.gain;
   zeta = config.zeta;
@@ -381,6 +381,9 @@ void ImuFilterRos::reconfigCallback(FilterConfig& config, uint32_t level)
   mag_bias_.z = config.mag_bias_z;
   orientation_variance_ = config.orientation_stddev * config.orientation_stddev;
   ROS_INFO("Magnetometer bias values: %f %f %f", mag_bias_.x, mag_bias_.y, mag_bias_.z);
+  mag_declination = config.mag_declination;
+  mag_declination_q_.setRPY(0.0, 0.0, -mag_declination);
+  ROS_INFO("Magnetic declination (deg): %f", mag_declination * 180.0 / M_PI);
 }
 
 void ImuFilterRos::checkTopicsTimerCallback(const ros::TimerEvent&)
