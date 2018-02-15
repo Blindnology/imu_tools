@@ -95,6 +95,7 @@ void ComplementaryFilterROS::initializeParams()
   bool do_bias_estimation;
   double bias_alpha;
   bool do_adaptive_gain;
+  double gravity;
   double mag_declination;
 
   if (!nh_private_.getParam ("fixed_frame", fixed_frame_))
@@ -119,6 +120,8 @@ void ComplementaryFilterROS::initializeParams()
     bias_alpha = 0.01;
   if (!nh_private_.getParam ("do_adaptive_gain", do_adaptive_gain))
     do_adaptive_gain = true;
+  if (!nh_private_.getParam ("gravity", gravity))
+    gravity = 9.81;
   if (!nh_private_.getParam ("mag_declination", mag_declination))
     mag_declination = 0.0;
   mag_declination_q_.setRPY(0.0, 0.0, M_PI_2 - mag_declination);
@@ -131,6 +134,9 @@ void ComplementaryFilterROS::initializeParams()
 
   filter_.setDoBiasEstimation(do_bias_estimation);
   filter_.setDoAdaptiveGain(do_adaptive_gain);
+
+  if(!filter_.setGravity(gravity))
+    ROS_WARN("Invalid gravity passed to ComplementaryFilter.");
 
   if(!filter_.setGainAcc(gain_acc))
     ROS_WARN("Invalid gain_acc passed to ComplementaryFilter.");

@@ -40,6 +40,8 @@ class ComplementaryFilter
     ComplementaryFilter();    
     virtual ~ComplementaryFilter();
 
+    bool setGravity(double gravity);
+
     bool setGainAcc(double gain);
     bool setGainMag(double gain);
     double getGainAcc() const;
@@ -89,7 +91,7 @@ class ComplementaryFilter
                 double dt);
 
   private:
-    static const double kGravity;
+    double kGravity;
     static const double gamma_;
     // Bias estimation steady state thresholds
     static const double kAngularVelocityThreshold;

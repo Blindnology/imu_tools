@@ -37,7 +37,6 @@
 
 namespace imu_tools {
 
-const double ComplementaryFilter::kGravity = 9.81;
 const double ComplementaryFilter::gamma_ = 0.01;
 // Bias estimation steady state thresholds
 const double ComplementaryFilter::kAngularVelocityThreshold = 0.2;
@@ -76,6 +75,17 @@ void ComplementaryFilter::setDoAdaptiveGain(bool do_adaptive_gain)
 bool ComplementaryFilter::getDoAdaptiveGain() const
 {
   return do_adaptive_gain_;
+}
+
+bool ComplementaryFilter::setGravity(double gravity)
+{
+  if (gravity >= 9.0 && gravity <= 11.0)
+  {
+    kGravity = gravity;
+    return true;
+  }
+  else
+    return false;
 }
 
 bool ComplementaryFilter::setGainAcc(double gain)
