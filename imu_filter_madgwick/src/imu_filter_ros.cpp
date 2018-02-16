@@ -25,6 +25,7 @@
 #include "imu_filter_madgwick/imu_filter_ros.h"
 #include "imu_filter_madgwick/stateless_orientation.h"
 #include "geometry_msgs/TransformStamped.h"
+#include <std_msgs/Float32.h>
 #include <tf2/LinearMath/Quaternion.h>
 #include <tf2/LinearMath/Matrix3x3.h>
 
@@ -93,6 +94,9 @@ ImuFilterRos::ImuFilterRos(ros::NodeHandle nh, ros::NodeHandle nh_private):
 
   if (publish_debug_topics_)
   {
+    dt_debug_publisher_ = nh_.advertise<std_msgs::Float32>(
+      ros::names::resolve("imu") + "/dt", 5);
+
     rpy_filtered_debug_publisher_ = nh_.advertise<geometry_msgs::Vector3Stamped>(
       ros::names::resolve("imu") + "/rpy/filtered", 5);
 
@@ -265,6 +269,8 @@ void ImuFilterRos::imuMagCallback(
 
   if(publish_debug_topics_)
   {
+    dt_debug_publisher_.publish(dt*1000.f);
+
     geometry_msgs::Quaternion orientation;
     if (StatelessOrientation::computeOrientation(world_frame_, lin_acc, mag_compensated, orientation))
     {

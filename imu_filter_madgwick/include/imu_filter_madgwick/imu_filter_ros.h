@@ -68,6 +68,7 @@ class ImuFilterRos
     boost::shared_ptr<MagSubscriber> mag_subscriber_;
     boost::shared_ptr<Synchronizer> sync_;
 
+    ros::Publisher dt_debug_publisher_;
     ros::Publisher rpy_filtered_debug_publisher_;
     ros::Publisher rpy_raw_debug_publisher_;
     ros::Publisher imu_publisher_;
