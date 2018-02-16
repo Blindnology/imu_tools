@@ -64,6 +64,13 @@ public:
         world_frame_ = frame;
     }
 
+    void getGyroBiases(double& w_bx, double& w_by, double& w_bz)
+    {
+        w_bx = w_bx_;
+        w_by = w_by_;
+        w_bz = w_bz_;
+    }
+
     void getOrientation(double& q0, double& q1, double& q2, double& q3, tf2::Quaternion &mag_declination_q)
     {
         tf2::Quaternion q(this->q1, this->q2, this->q3, this->q0);

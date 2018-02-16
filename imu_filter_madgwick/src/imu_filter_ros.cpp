@@ -305,10 +305,16 @@ void ImuFilterRos::publishFilteredMsg(const ImuMsg::ConstPtr& imu_msg_raw)
 {
   double q0,q1,q2,q3;
   filter_.getOrientation(q0,q1,q2,q3, mag_declination_q_);
+  double w_bx, w_by, w_bz;
+  filter_.getGyroBiases(w_bx, w_by, w_bz);
 
   // create and publish filtered IMU message
   boost::shared_ptr<ImuMsg> imu_msg =
     boost::make_shared<ImuMsg>(*imu_msg_raw);
+
+  imu_msg->angular_velocity.x -= w_bx;
+  imu_msg->angular_velocity.y -= w_by;
+  imu_msg->angular_velocity.z -= w_bz;
 
   imu_msg->orientation.w = q0;
   imu_msg->orientation.x = q1;
