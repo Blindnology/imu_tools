@@ -269,7 +269,9 @@ void ImuFilterRos::imuMagCallback(
 
   if(publish_debug_topics_)
   {
-    dt_debug_publisher_.publish(dt*1000.f);
+    std_msgs::Float32 dt_msg;
+    dt_msg.data = dt*1000.f;
+    dt_debug_publisher_.publish(dt_msg);
 
     geometry_msgs::Quaternion orientation;
     if (StatelessOrientation::computeOrientation(world_frame_, lin_acc, mag_compensated, orientation))
